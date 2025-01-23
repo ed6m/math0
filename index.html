@@ -12,31 +12,31 @@
             margin: 20px;
             background-color: #e9ecef;
             color: #343a40;
-            font-size: 18px; /* Increased base font size */
+            font-size: 18px;
         }
 
         h1 {
             text-align: center;
             color: #007bff;
             margin-bottom: 20px;
-            font-size: 32px; /* Increased heading size */
+            font-size: 32px;
         }
 
         label {
-            font-size: 20px; /* Increased label size */
+            font-size: 20px;
             color: #495057;
         }
 
         input[type="number"] {
             padding: 10px;
-            width: 100%; /* Make input responsive */
-            max-width: 300px; /* Set a max width */
+            width: 100%;
+            max-width: 300px;
             border: 2px solid #007bff;
             border-radius: 5px;
             margin-right: 10px;
-            box-sizing: border-box; /* Include padding in width */
+            box-sizing: border-box;
             transition: border-color 0.3s;
-            font-size: 18px; /* Increased input font size */
+            font-size: 18px;
         }
 
         input[type="number"]:focus {
@@ -52,7 +52,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
-            font-size: 18px; /* Increased button font size */
+            font-size: 18px;
         }
 
         button:hover {
@@ -72,34 +72,33 @@
             border-radius: 5px;
             padding: 15px;
             margin: 5px;
-            width: 90%; /* Make result frames responsive */
-            max-width: 300px; /* Set a max width */
+            width: 90%;
+            max-width: 300px;
             text-align: center;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
-            font-size: 18px; /* Increased result frame font size */
+            font-size: 18px;
         }
 
         .result-frame:hover {
             transform: scale(1.02);
         }
 
-        /* Media Queries for responsiveness */
         @media (max-width: 600px) {
             h1 {
-                font-size: 28px; /* Adjust heading size for smaller screens */
+                font-size: 28px;
             }
 
             label {
-                font-size: 18px; /* Adjust label size */
+                font-size: 18px;
             }
 
             input[type="number"] {
-                margin-bottom: 10px; /* Add margin for better spacing */
+                margin-bottom: 10px;
             }
 
             button {
-                width: 100%; /* Make button full width */
+                width: 100%;
             }
         }
     </style>
@@ -114,46 +113,55 @@
     <div class="result" id="results"></div>
 
     <script>
+        function formatNumber(num) {
+            const str = num.toString();
+            const decimalIndex = str.indexOf('.');
+            if (decimalIndex === -1) {
+                return str + '.00'; // إذا لم يكن هناك فاصلة عشرية، أضف .00
+            }
+            return str.slice(0, decimalIndex + 3); // احتفظ بمرتبتي الأرقام بعد الفاصلة
+        }
+
         function calculate() {
             const input = document.getElementById('numberInput').value;
             const number = parseFloat(input);
             const results = [];
 
-            if (!isNaN(number)) {
+            if (!isNaN(number) && number >= 0) { // Check for non-negative number
                 // العملية 1
-                const result1 = Math.pow(Math.sqrt(number) + 0.25, 2).toFixed(2);
-                results.push(`Opening Time: ${number.toFixed(2)}`);
-                results.push(` A1: ${result1}`);
+                const result1 = Math.pow(Math.sqrt(number) + 0.25, 2);
+                results.push(`Opening Time: ${formatNumber(number)}`);
+                results.push(` A1: ${formatNumber(result1)}`);
 
                 // العملية 2
-                const result2 = Math.pow(Math.sqrt(number) + 0.125, 2).toFixed(2);
-                results.push(` A2: ${result2}`);
+                const result2 = Math.pow(Math.sqrt(number) + 0.125, 2);
+                results.push(` A2: ${formatNumber(result2)}`);
 
                 // العملية 3
-                const result3 = Math.pow(Math.sqrt(number) - 0.25, 2).toFixed(2);
-                results.push(` B1: ${result3}`);
+                const result3 = Math.pow(Math.sqrt(number) - 0.25, 2);
+                results.push(` B1: ${formatNumber(result3)}`);
 
                 // العملية 4
-                const result4 = Math.pow(Math.sqrt(number) - 0.125, 2).toFixed(2);
-                results.push(` B2: ${result4}`);
+                const result4 = Math.pow(Math.sqrt(number) - 0.125, 2);
+                results.push(` B2: ${formatNumber(result4)}`);
 
                 // العملية 5
                 const C1 = (result2 - number) / 2 + number;
-                results.push(` 1 C: ${C1.toFixed(2)}`);
+                results.push(` 1 C: ${formatNumber(C1)}`);
 
                 // العملية 6
-                const C2 = (result1 - result2) / 2 + parseFloat(result2);
-                results.push(` 2 C: ${C2.toFixed(2)}`);
+                const C2 = (result1 - result2) / 2 + result2;
+                results.push(` 2 C: ${formatNumber(C2)}`);
 
                 // العملية 7
-                const C3 = (number - result4) / 2 + C1;
-                results.push(` 3 C: ${C3.toFixed(2)}`);
+                const C3 = (number - result4) / 2 + result4;
+                results.push(` 3 C: ${formatNumber(C3)}`);
 
                 // العملية 8
-                const C4 = (result3 - result4) / 2 + parseFloat(result4);
-                results.push(` 4 C: ${C4.toFixed(2)}`);
+                const C4 = (result3 - result4) / 2 + result4;
+                results.push(` 4 C: ${formatNumber(C4)}`);
             } else {
-                results.push('يرجى إدخال رقم صالح.');
+                results.push('يرجى إدخال رقم صالح وغير سالب.');
             }
 
             // Clear previous results
@@ -175,7 +183,7 @@
         };
 
         function showAlert() {
-            alert("For the skinny 😉"); // Alert with skinny and caring emojis
+            alert("For the skinny 😉");
         }
     </script>
 </body>
